@@ -7,7 +7,6 @@ describe('HomeComponent', () => {
   let fixture: ComponentFixture<HomeComponent>;
 
   beforeEach(async () => {
-    console.log('hi1');
     await TestBed.configureTestingModule({
       declarations: [ HomeComponent ]
     })
@@ -15,8 +14,6 @@ describe('HomeComponent', () => {
   });
 
   beforeEach(() => {
-    console.log('hi2');
-
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
