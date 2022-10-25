@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from '../services/auth/auth.service';
 import { User } from '../services/auth/user';
+import { DietaryPreferencesService } from '../services/dietary-preferences/dietary-preferences.service';
 
 @Component({
   selector: 'app-signup',
@@ -13,25 +15,18 @@ export class SignupComponent implements OnInit {
     username: '',
     password: ''
   }
-  dietPreferences = [
-    { name: 'BBQ', checked: false },
-    { name: 'Burger', checked: false },
-    { name: 'Chinese', checked: false },
-    { name: 'Deli', checked: false },
-    { name: 'Fast Food', checked: false },
-    { name: 'Italian', checked: false },
-    { name: 'Japanese', checked: false },
-    { name: 'Mexican', checked: false },
-    { name: 'Pizza', checked: false }
-  ];
+  dietPreferences =[];
   errorMessage:string;
-  constructor(private authServ: AuthService) { }
+  constructor(private authServ: AuthService,private dietPrefServs:DietaryPreferencesService,private router:Router) {
+    this.dietPreferences=dietPrefServs.getdietPreferences();
+  }
 
   ngOnInit(): void {
   }
   signup(formValue: User) {
     formValue.dietPreferences=this.getSelectedPrefereces();
     this.authServ.signup(formValue).subscribe(res => {
+      this.router.navigate(['/dashboard']);
       console.log('res', res);
     },err=> this.errorMessage=err.error.message)
   }
