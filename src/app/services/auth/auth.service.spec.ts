@@ -5,14 +5,18 @@ import { AuthService } from './auth.service';
 import { env } from 'process';
 import { environment } from 'src/environments/environment';
 import { of } from 'rxjs';
-
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { JwtModule } from '@auth0/angular-jwt';
+const tokenGetter = () => {
+  return localStorage.getItem('token');
+}
 describe('AuthService', () => {
   let authService: AuthService;
   let http: HttpTestingController;
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [AuthService]
+      imports: [HttpClientTestingModule, JwtModule.forRoot({ config: { tokenGetter: tokenGetter } })],
+      providers: [AuthService, JwtHelperService]
     });
     authService = TestBed.get(AuthService);
     http = TestBed.get(HttpTestingController);
@@ -39,7 +43,7 @@ describe('AuthService', () => {
       authService.signup(user).subscribe(res => {
         response = res;
       })
-      const loignSpy= spyOn(authService,'login').and.callFake(()=>of(loginResponse));
+      const loignSpy = spyOn(authService, 'login').and.callFake(() => of(loginResponse));
       http.expectOne(authService.signupAPI).flush(signupResponse);
       expect(response).toEqual(loginResponse);
       expect(loignSpy).toHaveBeenCalledWith(user);
@@ -65,8 +69,8 @@ describe('AuthService', () => {
         "token": "NgalrToken"
       }
       let response;
-      authService.login(user).subscribe(res=>{
-        response=res;
+      authService.login(user).subscribe(res => {
+        response = res;
       });
       http.expectOne(authService.loginAPI).flush(loginResponse);
       expect(response).toEqual(loginResponse);
@@ -74,10 +78,22 @@ describe('AuthService', () => {
       http.verify();
     })
   })
-  // describe('logout', () => {
-  //   it('should clear user data from storage', () => {
-  //     authService.logout();
-  //     expect(localStorage.getItem('token')).toEqual(null);
-  //   })
-  // })
+  describe('isLoggedIn', () => {
+    it('should return true if the user is logged in', () => {
+      localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' +
+        'eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.' +
+        'TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ');
+      expect(authService.isLoggedIn()).toEqual(true);
+    });
+    it('should return false if the user is notlogged in', () => {
+      localStorage.removeItem('token');
+      expect(authService.isLoggedIn()).toEqual(false);
+    });
+  });
+  describe('logout', () => {
+    it('should clear user data from storage', () => {
+      authService.logout();
+      expect(authService.isLoggedIn()).toEqual(false);
+    })
+  })
 });

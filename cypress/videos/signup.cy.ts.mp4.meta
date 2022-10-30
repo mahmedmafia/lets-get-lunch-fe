@@ -1,0 +1,16 @@
+;FFMETADATA1
+[CHAPTER]
+TIMEBASE=1/1000
+START=-7079
+END=9610
+title=Signup should navigate to dashboard with valid credentials
+[CHAPTER]
+TIMEBASE=1/1000
+START=19072
+END=26875
+title=Signup should display an error with invalid credentials
+[CHAPTER]
+TIMEBASE=1/1000
+START=6586
+END=35583
+title=Signup should display an error for a username that already exist
