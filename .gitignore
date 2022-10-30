@@ -5,6 +5,8 @@
 /tmp
 /out-tsc
 /bazel-out
+cypress/screenshots
+cypress/videos
 
 # Node
 /node_modules

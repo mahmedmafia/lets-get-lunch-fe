@@ -1,11 +1,7 @@
 describe("Signup", () => {
 
-  before(() => {
-    Cypress.config("baseUrl", "http://localhost:4200");
-  });
-
   beforeEach(() => {
-    cy.request("DELETE", "http://localhost:3000/api/test");
+    cy.clearDB();
   });
   it("should navigate to dashboard with valid credentials", () => {
     cy.visit('/signup').url()
@@ -27,23 +23,27 @@ describe("Signup", () => {
       .should('be.visible')
       .should('have.text', 'Your password must be at least 5 characters long.')
   });
-  it("should display an error for a username that already exist", () => {
-    const user={
-      username:"test",
-      password:'password',
-    }
-    cy.visit('/signup').url()
-    .url()
-    .should("include", "/signup")
-    .get("#username").type(user.username)
-    .get("#password").type("password")
-    .get('form').submit().url().should('include', 'dashboard').visit('/signup').url()
-    .url()
-    .should("include", "/signup")
-    .get("#username").type(user.username)
-    .get("#password").type("differentpassword")
-    .get('form').submit().get('.alert')
-    .should('be.visible')
-    .should('have.text', 'This user already exists.');
+
+  it('should display an error for a username that already exists', () => {
+    cy
+      .visit('/signup')
+      .url().should('include', '/signup')
+      .get('#username').type('user')
+      .get('#password').type('password')
+      .get('form').submit()
+      .url().should('include', '/dashboard');
+
+    cy
+      .get('[data-test=logout]').click();
+
+    cy
+      .visit('/signup')
+      .url().should('include', '/signup')
+      .get('#username').type('user')
+      .get('#password').type('password')
+      .get('form').submit()
+      .get('.alert')
+      .should('be.visible')
+      .should('have.text', 'This user already exists.');
   });
 });

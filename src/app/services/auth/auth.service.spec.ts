@@ -72,9 +72,11 @@ describe('AuthService', () => {
       authService.login(user).subscribe(res => {
         response = res;
       });
+      spyOn(authService.loggedIn,'emit')
       http.expectOne(authService.loginAPI).flush(loginResponse);
       expect(response).toEqual(loginResponse);
       expect(localStorage.getItem('token')).toEqual(loginResponse.token);
+      expect(authService.loggedIn.emit).toHaveBeenCalled();
       http.verify();
     })
   })
@@ -94,6 +96,7 @@ describe('AuthService', () => {
     it('should clear user data from storage', () => {
       authService.logout();
       expect(authService.isLoggedIn()).toEqual(false);
+      expect(authService.loggedIn.emit).toHaveBeenCalledWith(false);
     })
   })
 });
