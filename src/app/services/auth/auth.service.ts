@@ -2,13 +2,15 @@ import { EventEmitter, Injectable, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { loginResponse, signupResponse, User } from './user';
 import { environment } from 'src/environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import {  mergeMap, switchMap, tap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
+
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class AuthService {
   signupAPI = environment.API_URL + '/users'
   @Output() loggedIn:EventEmitter<boolean>
@@ -31,7 +33,6 @@ export class AuthService {
     return !this.jwtHelper.isTokenExpired();
   }
   logout(){
-    console.log('called');
     localStorage.clear();
     this.loggedIn.emit(false);
   }

@@ -13,13 +13,14 @@
 
     <div class="collapse navbar-collapse" id="lgl-navbar">
       <ul class=" navbar-nav navbar-right">
-        <li class="nav-item" *ngIf="!isLoggedIn">
-          <a class="nav-link" data-test="signup" routerLink="/signup">Signup</a>
-        </li>
-        <!-- <li class="nav-item" *ngIf="!isLoggedIn">
-          <a data-test="login" routerLink="/login">Login</a>
-        </li> -->
-
+        <ng-container *ngIf="!isLoggedIn">
+          <li class="nav-item" >
+            <a class="nav-link" data-test="signup" routerLink="/signup">Signup</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-test="login" routerLink="/login">Login</a>
+          </li>
+        </ng-container>
         <li class="nav-item" *ngIf="isLoggedIn">
           <a class="nav-link" data-test="logout" routerLink="" (click)="logout()">Logout</a>
         </li>

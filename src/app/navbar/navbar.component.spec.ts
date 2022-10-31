@@ -4,17 +4,13 @@ import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { AuthService } from '../services/auth/auth.service';
+import { mockAuth } from '../services/auth/auth.service.spec';
 
 import { NavbarComponent } from './navbar.component';
-class mockAuth {
-  isLoggedIn() { }
-  loggedIn = of();
-  logout() { }
-}
 class mockRouter {
   navigate(path) { }
 }
-fdescribe('NavbarComponent', () => {
+describe('NavbarComponent', () => {
   let component: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
   let authService: AuthService;
@@ -83,6 +79,11 @@ fdescribe('NavbarComponent', () => {
       const link=db.query(By.css("[data-test=signup]"));
       expect(link).toBeTruthy();
       expect(link.attributes.routerLink).toEqual('/signup');
+    })
+    it('should have link of login',()=>{
+      const link=db.query(By.css("[data-test=login]"));
+      expect(link).toBeTruthy();
+      expect(link.attributes.routerLink).toEqual('/login');
     })
 
   })

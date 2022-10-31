@@ -6,6 +6,9 @@ describe('navbar', () => {
     it('should show a link to signup', () => {
       cy.get('[data-test=signup]').click().url().should('include', '/signup');
     })
+    it('should show a link to login', () => {
+      cy.get('[data-test=login]').click().url().should('include', '/login');
+    })
     it('should redirect base url when navbar-brand clicked', () => {
       cy.get('.navbar-brand').click().url().should('include', '/');
     })

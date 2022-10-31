@@ -7,6 +7,12 @@ import { environment } from 'src/environments/environment';
 import { of } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { JwtModule } from '@auth0/angular-jwt';
+export class mockAuth {
+  isLoggedIn() { }
+  loggedIn = of();
+  logout() { }
+  login(user){}
+}
 const tokenGetter = () => {
   return localStorage.getItem('token');
 }
@@ -94,6 +100,7 @@ describe('AuthService', () => {
   });
   describe('logout', () => {
     it('should clear user data from storage', () => {
+      spyOn(authService.loggedIn,'emit').and.stub();
       authService.logout();
       expect(authService.isLoggedIn()).toEqual(false);
       expect(authService.loggedIn.emit).toHaveBeenCalledWith(false);
