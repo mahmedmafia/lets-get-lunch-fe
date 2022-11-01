@@ -13,7 +13,9 @@
   },
   "private": true,
   "dependencies": {
+    "@agm/core": "1.1.0",
     "@angular/animations": "~10.1.2",
+    "@angular/cdk": "10",
     "@angular/common": "~10.1.2",
     "@angular/compiler": "~10.1.2",
     "@angular/core": "~10.1.2",
@@ -25,6 +27,7 @@
     "bootstrap": "v4",
     "cypress": "^10.10.0",
     "jquery": "1",
+    "ng-pick-datetime": "^7.0.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"

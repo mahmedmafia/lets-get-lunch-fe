@@ -11,7 +11,7 @@ export class mockAuth {
   isLoggedIn() { }
   loggedIn = of();
   logout() { }
-  login(user){}
+  login(user) { }
 }
 const tokenGetter = () => {
   return localStorage.getItem('token');
@@ -19,6 +19,7 @@ const tokenGetter = () => {
 describe('AuthService', () => {
   let authService: AuthService;
   let http: HttpTestingController;
+  let jwtHelper: JwtHelperService;
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, JwtModule.forRoot({ config: { tokenGetter: tokenGetter } })],
@@ -26,6 +27,8 @@ describe('AuthService', () => {
     });
     authService = TestBed.get(AuthService);
     http = TestBed.get(HttpTestingController);
+    jwtHelper = TestBed.get(JwtHelperService);
+
   });
 
   it('should be created', () => {
@@ -78,7 +81,7 @@ describe('AuthService', () => {
       authService.login(user).subscribe(res => {
         response = res;
       });
-      spyOn(authService.loggedIn,'emit')
+      spyOn(authService.loggedIn, 'emit')
       http.expectOne(authService.loginAPI).flush(loginResponse);
       expect(response).toEqual(loginResponse);
       expect(localStorage.getItem('token')).toEqual(loginResponse.token);
@@ -100,10 +103,29 @@ describe('AuthService', () => {
   });
   describe('logout', () => {
     it('should clear user data from storage', () => {
-      spyOn(authService.loggedIn,'emit').and.stub();
+      spyOn(authService.loggedIn, 'emit').and.stub();
       authService.logout();
       expect(authService.isLoggedIn()).toEqual(false);
       expect(authService.loggedIn.emit).toHaveBeenCalledWith(false);
+    })
+  })
+  describe('current user', () => {
+    it('should return user object when decoding token', () => {
+      spyOn(localStorage, 'getItem').and.returnValue('s3rT0ken');
+      spyOn(jwtHelper, 'decodeToken').and.callFake(() => {
+        return {
+          exp: 1511512,
+          iat: 1512241,
+          username: 'username',
+          _id: '51aasdasdkak'
+        }
+      });
+      const res = authService.currentUser();
+      expect(res.username).toBeDefined();
+      expect(res._id).toBeDefined();
+      expect(localStorage.getItem).toHaveBeenCalled();
+      expect(jwtHelper.decodeToken).toHaveBeenCalled();
+
     })
   })
 });

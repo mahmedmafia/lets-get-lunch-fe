@@ -27,7 +27,6 @@ export class SignupComponent implements OnInit {
     formValue.dietPreferences=this.getSelectedPrefereces();
     this.authServ.signup(formValue).subscribe(res => {
       this.router.navigate(['/dashboard']);
-      console.log('res', res);
     },err=> this.errorMessage=err.error.message)
   }
   onPrefCheck(index:number){

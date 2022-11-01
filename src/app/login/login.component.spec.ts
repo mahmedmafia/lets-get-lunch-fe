@@ -87,5 +87,22 @@ describe('LoginComponent', () => {
       expect(alertMessage.nativeElement.textContent).toEqual('Incorrect password.');
       expect(authServ.login).toHaveBeenCalled();
     });
+    it('should result in error if user is incorrect', () => {
+      loginPage.userInput.value = 'username';
+      loginPage.passwordInput.value = 'password';
+      loginPage.passwordInput.dispatchEvent(new Event('input'));
+      loginPage.passwordInput.dispatchEvent(new Event('input'));
+      spyOn(authServ, 'login').and.callFake(() => {
+        return throwError({ error: { message: 'User could not be found.' } });
+      });
+      spyOn(router, 'navigate').and.stub();
+
+      loginPage.loginBtn.nativeElement.click();
+      fixture.detectChanges();
+
+      const alertMessage = db.query(By.css('.error'));
+      expect(alertMessage.nativeElement.textContent).toEqual('User could not be found.');
+      expect(router.navigate).not.toHaveBeenCalled();
+    });
   });
 });
